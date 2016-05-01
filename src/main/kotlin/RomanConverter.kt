@@ -1,6 +1,6 @@
 operator fun String.times(times: Int): String = this.repeat(times)
 
-fun String.stuff(prefix: String): Pair<String, Int> {
+fun String.countStartsWith(prefix: String): Pair<String, Int> {
     var count = 0
     var buffer = this
     while (buffer.startsWith(prefix)) {
@@ -33,7 +33,7 @@ fun toArabic(input: String): Int = ROMAN_CONVERSIONS.fold(Pair(input, 0)) { valu
         val (arabic, roman) = next
         val (buffer, sum) = value
 
-        val (newBuffer, count) = buffer.stuff(roman)
+        val (newBuffer, count) = buffer.countStartsWith(roman)
 
         Pair(newBuffer, sum + (arabic * count))
     }.second
