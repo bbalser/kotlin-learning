@@ -1,5 +1,15 @@
 operator fun String.times(times: Int): String = this.repeat(times)
 
+fun String.stuff(prefix: String): Pair<String, Int> {
+    var count = 0
+    var buffer = this
+    while (buffer.startsWith(prefix)) {
+        count++
+        buffer = buffer.drop(prefix.length)
+    }
+    return Pair(buffer, count)
+}
+
 private val ROMAN_CONVERSIONS = listOf(
         10 to "X",
         9 to "IX",
@@ -23,13 +33,7 @@ fun toArabic(input: String): Int = ROMAN_CONVERSIONS.fold(Pair(input, 0)) { valu
         val (arabic, roman) = next
         val (buffer, sum) = value
 
-        var count = 0
-        var tempBuffer = buffer
+        val (newBuffer, count) = buffer.stuff(roman)
 
-        while (tempBuffer.startsWith(roman)) {
-            count++
-            tempBuffer = tempBuffer.drop(roman.length)
-        }
-
-        Pair(tempBuffer, sum + (arabic * count))
+        Pair(newBuffer, sum + (arabic * count))
     }.second
