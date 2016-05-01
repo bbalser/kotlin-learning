@@ -11,7 +11,7 @@ val ROMAN_CONVERSIONS = listOf(
 fun toRoman(arabic: Int): String {
 
     return ROMAN_CONVERSIONS.fold(Pair(arabic, "")) { value, next ->
-        var (number, buffer) = value
+        val (number, buffer) = value
         val (arabic, roman) = next
 
         val times: Int = number / arabic
