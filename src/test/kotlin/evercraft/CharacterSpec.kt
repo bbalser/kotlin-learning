@@ -12,6 +12,18 @@ class CharacterSpec : Spek({
             it("should return name") {
                 assertEquals("Brian", character.name)
             }
+
+            it("should have default alignment") {
+                assertEquals(Alignment.NEUTRAL, character.alignment )
+            }
+
+            it("should have default armor class") {
+                assertEquals(10, character.armorClass)
+            }
+
+            it("should have default hit points") {
+                assertEquals(5, character.hitPoints)
+            }
         }
 
         on("when renamed") {
@@ -21,7 +33,7 @@ class CharacterSpec : Spek({
             }
         }
 
-        
+
 
     }
 
