@@ -1,3 +1,5 @@
+package simple
+
 operator fun String.times(times: Int): String = this.repeat(times)
 
 fun String.countStartsWith(prefix: String): Pair<String, Int> {

@@ -1,4 +1,7 @@
+package simple
+
 import org.jetbrains.spek.api.Spek
+import simple.fizzbuzz
 import kotlin.test.assertEquals
 
 class FizzBuzzSpecs: Spek({

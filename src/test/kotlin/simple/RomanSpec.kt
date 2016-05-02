@@ -1,4 +1,8 @@
+package simple
+
 import org.jetbrains.spek.api.Spek
+import simple.toArabic
+import simple.toRoman
 import kotlin.test.assertEquals
 
 class RomanSpec : Spek({

@@ -1,3 +1,5 @@
+package simple
+
 import org.jetbrains.spek.api.Spek
 import kotlin.test.assertEquals
 

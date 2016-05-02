@@ -1,4 +1,4 @@
-
+package simple
 fun calculatePayment(arrival: Int, departure: Int, bedtime: Int): Int {
     val mappedArrival = mapTime(arrival)
     val mappedDeparture = mapTime(departure)
