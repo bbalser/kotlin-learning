@@ -1,7 +1,11 @@
 package evercraft
 
-class Attack(val attacker: Character, val defender: Character, val roll: Int) {
+class Attack(private val attacker: Character, private val defender: Character, private val roll: Int) {
 
-    fun isHit(): Boolean = roll >= defender.armorClass
+    fun isHit() = roll >= defender.armorClass
+
+    fun defender(): Character = defender.applyAttack(this)
+
+    fun damage(): Int = if (roll == 20) 2 else 1
 
 }

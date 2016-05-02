@@ -7,4 +7,7 @@ data class Character(val name: String,
 
     fun rename(newName: String): Character = copy(name = newName)
 
+    fun applyAttack(attack: Attack): Character = if (attack.isHit()) copy(hitPoints = hitPoints - attack.damage()) else this
+
+    fun isAlive(): Boolean = if (hitPoints > 0) true else false
 }

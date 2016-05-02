@@ -2,6 +2,8 @@ package evercraft
 
 import org.jetbrains.spek.api.Spek
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class CharacterSpec : Spek({
 
@@ -24,6 +26,10 @@ class CharacterSpec : Spek({
             it("should have default hit points") {
                 assertEquals(5, character.hitPoints)
             }
+
+            it("should be alive") {
+                assertTrue(character.isAlive())
+            }
         }
 
         on("when renamed") {
@@ -33,6 +39,12 @@ class CharacterSpec : Spek({
             }
         }
 
+        on("when damaged until hitpoints are zero") {
+            val damagedCharacter = Character(name = "damaged", hitPoints = 0)
+            it("should be dead") {
+                assertFalse(damagedCharacter.isAlive())
+            }
+        }
 
 
     }
