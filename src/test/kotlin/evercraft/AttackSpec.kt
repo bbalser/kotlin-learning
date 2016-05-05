@@ -18,8 +18,11 @@ class AttackSpec: Spek({
             )
 
             for ((roll, armorClass, isHit) in attackData) {
-                val attacker = Character(name = "attacker")
-                val defender = Character(name = "defender", armorClass = armorClass)
+                val attacker = character { name = "attacker" }
+                val defender = character {
+                    name = "defender"
+                    this.armorClass = armorClass
+                }
                 val attack = Attack(attacker, defender, roll)
                 it("will ${if (isHit) "hit" else "not hit"} when attack is $roll and defender's armorClass is $armorClass") {
                     assertEquals(isHit, attack.isHit())
@@ -29,8 +32,8 @@ class AttackSpec: Spek({
         }
 
         on("when successful") {
-            val attacker = Character(name = "attacker")
-            val defender = Character(name = "defender")
+            val attacker = character { name = "attacker" }
+            val defender = character { name = "defender" }
             val attack = Attack(attacker, defender, 10)
             it("should inflict 1 point of damage on defender") {
                 assertEquals(4, attack.defender().hitPoints)
@@ -38,8 +41,8 @@ class AttackSpec: Spek({
         }
 
         on("when critically successful") {
-            val attacker = Character(name = "attacker")
-            val defender = Character(name = "defender")
+            val attacker = character { name = "attacker" }
+            val defender = character { name = "defender" }
             val attack = Attack(attacker, defender, 20)
             it("should inflict 2 points of damage on defender") {
                 assertEquals(3, attack.defender().hitPoints)
@@ -47,8 +50,8 @@ class AttackSpec: Spek({
         }
 
         on("when unsuccessful") {
-            val attacker = Character(name = "attacker")
-            val defender = Character(name = "defender")
+            val attacker = character { name = "attacker" }
+            val defender = character { name = "defender" }
             val attack = Attack(attacker, defender, 9)
             it("shoult not inflict any damage to defender") {
                 assertEquals(5, attack.defender().hitPoints)
