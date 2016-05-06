@@ -38,7 +38,11 @@ class AttackSpec: Spek({
             val defender = character { name = "defender" }
             val attack = Attack(attacker, defender, 10)
             it("should inflict 1 point of damage on defender") {
-                assertEquals(4, attack.defender().hitPoints)
+                assertEquals(4, attack.defender.hitPoints)
+            }
+
+            it("should give the attacker 10 experience points") {
+                assertEquals(10, attack.attacker.experiencePoints)
             }
         }
 
@@ -47,7 +51,7 @@ class AttackSpec: Spek({
             val defender = character { name = "defender" }
             val attack = Attack(attacker, defender, 20)
             it("should inflict 2 points of damage on defender") {
-                assertEquals(3, attack.defender().hitPoints)
+                assertEquals(3, attack.defender.hitPoints)
             }
         }
 
@@ -56,7 +60,7 @@ class AttackSpec: Spek({
             val defender = character { name = "defender" }
             val attack = Attack(attacker, defender, 9)
             it("shoult not inflict any damage to defender") {
-                assertEquals(5, attack.defender().hitPoints)
+                assertEquals(5, attack.defender.hitPoints)
             }
         }
 
@@ -115,6 +119,7 @@ class AttackSpec: Spek({
                     dexterity = 12
                 }
             }
+
             val attack = Attack(attacker, defender, 10)
             it("should add dexterity modifier to armor Class") {
                 assertFalse(attack.isHit())

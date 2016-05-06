@@ -1,12 +1,14 @@
 package evercraft
 
+import java.lang.Math.max
 import kotlin.properties.Delegates
 
 class Character internal constructor(val name: String,
                                      val alignment: Alignment,
                                      val armorClass: Int,
                                      val abilities: Map<String, Ability>,
-                                     hitPoints: Int?) {
+                                     hitPoints: Int?,
+                                     val experiencePoints: Int = 0) {
 
     val strength: Ability by abilities
     val dexterity: Ability by abilities
@@ -20,15 +22,18 @@ class Character internal constructor(val name: String,
 
     fun applyAttack(attack: Attack): Character = if (attack.isHit()) copy(hitPoints = hitPoints - attack.damage()) else this
 
+    fun addExperience(attack: Attack): Character = if (attack.isHit()) copy(experiencePoints = experiencePoints + 10) else this
+
     fun isAlive(): Boolean = if (hitPoints > 0) true else false
 
     private fun copy(name: String = this.name,
                      alignment: Alignment = this.alignment,
                      armorClass: Int = this.armorClass,
                      abilities: Map<String, Ability> = this.abilities,
-                     hitPoints: Int = this.hitPoints) = Character(name, alignment, armorClass, abilities, hitPoints)
+                     hitPoints: Int = this.hitPoints,
+                     experiencePoints: Int = this.experiencePoints) = Character(name, alignment, armorClass, abilities, hitPoints, experiencePoints)
 
-    private fun determineDefaultHitPoints(): Int = 5 + constitution.modifier
+    private fun determineDefaultHitPoints(): Int = max(5 + constitution.modifier, 1)
 }
 
 fun character(block: CharacterBuilder.() -> Unit): Character {

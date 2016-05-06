@@ -2,16 +2,25 @@ package evercraft
 
 import java.lang.Math.max
 
-class Attack(private val attacker: Character, private val defender: Character, private val roll: Int) {
+class Attack(attacker: Character, defender: Character, val roll: Int) {
 
-    fun isHit() = (roll + attacker.strength.modifier) >= (defender.armorClass + defender.dexterity.modifier)
+    private val originalDefender: Character = defender
+    val defender: Character by lazy {
+        originalDefender.applyAttack(this)
+    }
 
-    fun defender(): Character = defender.applyAttack(this)
+    private val originalAttacker: Character = attacker
+    val attacker: Character by lazy {
+        originalAttacker.addExperience(this)
+    }
+
+
+    fun isHit() = (roll + originalAttacker.strength.modifier) >= (originalDefender.armorClass + originalDefender.dexterity.modifier)
 
     fun damage(): Int = max(damageMultiplier() * baseDamage(), 1)
 
     private fun damageMultiplier(): Int = if (roll == 20) 2 else 1
 
-    private fun baseDamage(): Int = 1 + attacker.strength.modifier
+    private fun baseDamage(): Int = 1 + originalAttacker.strength.modifier
 
 }

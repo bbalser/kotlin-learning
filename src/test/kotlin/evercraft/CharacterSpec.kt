@@ -60,6 +60,10 @@ class CharacterSpec : Spek({
                 assertEquals(10, character.charisma.score)
             }
 
+            it("should have a default experience points") {
+                assertEquals(0, character.experiencePoints)
+            }
+
         }
 
         on("when renamed") {
@@ -162,6 +166,19 @@ class CharacterSpec : Spek({
                 assertEquals(6, character.hitPoints)
             }
         }
+
+        on("when created as a very unhealthy character") {
+            val character = character {
+                name = "sickly"
+                abilities {
+                    constitution = 1
+                }
+            }
+            it("should still have 1 hitpoint") {
+                assertEquals(1, character.hitPoints)
+            }
+        }
+
 
     }
 
