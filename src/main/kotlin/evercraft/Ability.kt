@@ -1,6 +1,5 @@
 package evercraft
 
-import com.sun.javaws.exceptions.InvalidArgumentException
 import kotlin.reflect.KProperty
 
 class Ability(val score: Int) {

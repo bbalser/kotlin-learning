@@ -151,6 +151,18 @@ class CharacterSpec : Spek({
             }
         }
 
+        on("when created with a above average constitution") {
+            val character = character {
+                name = "hearty"
+                abilities {
+                    constitution = 12
+                }
+            }
+            it("should include constitution modifier in hitpoints") {
+                assertEquals(6, character.hitPoints)
+            }
+        }
+
     }
 
 
