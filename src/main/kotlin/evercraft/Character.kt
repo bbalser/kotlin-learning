@@ -1,6 +1,6 @@
 package evercraft
 
-import java.lang.Math.max
+import java.lang.Math.*
 import kotlin.properties.Delegates
 
 class Character internal constructor(val name: String,
@@ -17,6 +17,9 @@ class Character internal constructor(val name: String,
     val intelligence: Ability by abilities
     val charisma: Ability by abilities
     val hitPoints: Int = hitPoints ?: determineDefaultHitPoints()
+    val level: Int by lazy {
+        min((floor(experiencePoints / 1000.0) + 1).toInt(),20)
+    }
 
     fun rename(newName: String): Character = copy(name = newName)
 
@@ -50,6 +53,7 @@ class CharacterBuilder {
     var hitPoints: Int? = null
     var armorClass: Int = 10
     var alignment: Alignment = Alignment.NEUTRAL
+    var experiencePoints: Int = 0
 
     fun abilities(block: AbilitiesBuilder.() -> Unit): Unit {
         abilitesBuilder.block()
@@ -59,6 +63,7 @@ class CharacterBuilder {
             hitPoints = hitPoints,
             armorClass = armorClass,
             alignment = alignment,
-            abilities = abilitesBuilder.build())
+            abilities = abilitesBuilder.build(),
+            experiencePoints = experiencePoints)
 
 }

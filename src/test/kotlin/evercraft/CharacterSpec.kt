@@ -1,6 +1,5 @@
 package evercraft
 
-import com.sun.javaws.exceptions.InvalidArgumentException
 import org.jetbrains.spek.api.Spek
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -62,6 +61,10 @@ class CharacterSpec : Spek({
 
             it("should have a default experience points") {
                 assertEquals(0, character.experiencePoints)
+            }
+
+            it ("should have a default level of 1") {
+                assertEquals(1, character.level)
             }
 
         }
@@ -176,6 +179,33 @@ class CharacterSpec : Spek({
             }
             it("should still have 1 hitpoint") {
                 assertEquals(1, character.hitPoints)
+            }
+        }
+
+
+        val expData = listOf(
+                0..999 to 1,
+                1000..1999 to 2,
+                2000..2999 to 3,
+                3000..3999 to 4,
+                4000..4999 to 5,
+                5000..5999 to 6,
+                6000..6999 to 7,
+                19000..19999 to 20,
+                20000..29999 to 20
+        )
+
+        for ((range, level) in expData) {
+            on("with experience points in range ${range.first} to ${range.last}") {
+                it("should be level ${level}") {
+                    range.forEach { exp ->
+                        val character = character {
+                            name = "exp"
+                            experiencePoints = exp
+                        }
+                        assertEquals(level, character.level, "Experience: ${exp}")
+                    }
+                }
             }
         }
 
