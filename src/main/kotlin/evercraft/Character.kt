@@ -16,10 +16,10 @@ class Character internal constructor(val name: String,
     val wisdom: Ability by abilities
     val intelligence: Ability by abilities
     val charisma: Ability by abilities
-    val hitPoints: Int = hitPoints ?: determineDefaultHitPoints()
     val level: Int by lazy {
         min((floor(experiencePoints / 1000.0) + 1).toInt(),20)
     }
+    val hitPoints: Int = hitPoints ?: determineDefaultHitPoints()
 
     fun rename(newName: String): Character = copy(name = newName)
 
@@ -36,7 +36,7 @@ class Character internal constructor(val name: String,
                      hitPoints: Int = this.hitPoints,
                      experiencePoints: Int = this.experiencePoints) = Character(name, alignment, armorClass, abilities, hitPoints, experiencePoints)
 
-    private fun determineDefaultHitPoints(): Int = max(5 + constitution.modifier, 1)
+    private fun determineDefaultHitPoints(): Int = max(level * (5 + constitution.modifier), 1)
 }
 
 fun character(block: CharacterBuilder.() -> Unit): Character {

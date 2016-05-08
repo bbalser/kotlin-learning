@@ -182,7 +182,6 @@ class CharacterSpec : Spek({
             }
         }
 
-
         val expData = listOf(
                 0..999 to 1,
                 1000..1999 to 2,
@@ -206,7 +205,18 @@ class CharacterSpec : Spek({
                         assertEquals(level, character.level, "Experience: ${exp}")
                     }
                 }
+
+                val character = character {
+                    name = "jake"
+                    experiencePoints = range.first
+                }
+
+                it("should have ${5 * character.level} hitpoints") {
+                    assertEquals(5 * character.level, character.hitPoints)
+                }
+
             }
+
         }
 
 

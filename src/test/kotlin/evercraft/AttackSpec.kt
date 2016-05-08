@@ -127,6 +127,48 @@ class AttackSpec: Spek({
         }
 
 
+        val attackRollLevels = listOf(
+                1 to 10,
+                2 to 9,
+                3 to 9,
+                4 to 8,
+                5 to 8,
+                6 to 7,
+                7 to 7,
+                8 to 6,
+                9 to 6,
+                10 to 5,
+                11 to 5,
+                12 to 4,
+                13 to 4,
+                14 to 3,
+                15 to 3,
+                16 to 2,
+                17 to 2,
+                18 to 1,
+                19 to 1
+        )
+
+        for ((level, roll) in attackRollLevels) {
+            val attacker = character {
+                name = "attacker"
+                experiencePoints = (level-1) * 1000
+            }
+            val defender = character { name = "defender" }
+            on("when attacker is level ${level} and rolls a ${roll - 1}") {
+                val attack = Attack(attacker, defender, roll - 1)
+                it ("should miss") {
+                    assertFalse(attack.isHit())
+                }
+            }
+
+            on("when attacker is level ${level} and rolls a ${roll}") {
+                val attack = Attack(attacker, defender, roll)
+                it("should hit") {
+                    assertTrue(attack.isHit())
+                }
+            }
+        }
     }
 
 })
