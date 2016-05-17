@@ -1,70 +1,59 @@
 package evercraft.equippable
 
-import evercraft.AbilitiesBuilder
 import evercraft.Character
-import java.util.concurrent.atomic.AtomicInteger
-import kotlin.properties.Delegates
+import evercraft.ThreadLocalDelegate
+import kotlin.reflect.KProperty
+
 
 open class Equipable(block: EquipableBody.() -> Unit) {
-    private var data: MutableMap<String, Int> = mutableMapOf()
+    private val body = EquipableBody()
 
-    val strength: Int by data
-    val dexterity: Int by data
+    companion object {
+        internal val attackerThreadLocal: ThreadLocal<Character> = ThreadLocal()
+        internal val defenderThreadLocal: ThreadLocal<Character> = ThreadLocal()
+    }
 
     init {
-        val body = EquipableBody()
         body.block()
-        body.build(data)
     }
 
-    fun attackBonus(attacker: Character, defender: Character):Int {
-        TODO()
-    }
+    val strength: Int by LamdaListToIntDelegate<Equipable>(body.strength)
+    val dexterity: Int by LamdaListToIntDelegate<Equipable>(body.dexterity)
+    val constitution: Int by LamdaListToIntDelegate<Equipable>(body.constitution)
+    val wisdom: Int by LamdaListToIntDelegate<Equipable>(body.wisdom)
+    val intelligence: Int by LamdaListToIntDelegate<Equipable>(body.intelligence)
+    val charisma: Int by LamdaListToIntDelegate<Equipable>(body.charisma)
 
 }
 
 class EquipableBody {
 
-    val abilitiesBonusBuilder = AbilitiesBonusBuilder()
+    val attacker: Character by ThreadLocalDelegate(Equipable.attackerThreadLocal)
+    val defender: Character by ThreadLocalDelegate(Equipable.defenderThreadLocal)
 
-    fun abilities(block: AbilitiesBonusBuilder.() -> Unit): Unit = abilitiesBonusBuilder.block()
+    val strength: MutableList<() -> Int> = mutableListOf()
+    val dexterity: MutableList<() -> Int> = mutableListOf()
+    val constitution: MutableList<() -> Int> = mutableListOf()
+    val wisdom: MutableList<() -> Int> = mutableListOf()
+    val intelligence: MutableList<() -> Int> = mutableListOf()
+    val charisma: MutableList<() -> Int> = mutableListOf()
 
-    class AbilitiesBonusBuilder {
-
-        val strength: IntHolder = IntHolder(0)
-        val dexterity: IntHolder = IntHolder(0)
-
+    operator fun MutableList<() -> Int>.plus(other: Int): Unit {
+        this.add({ -> other })
     }
 
-    fun whenAttacking(block: WhenAttackingBody.() -> Unit): Unit = {
-        
-    }
-
-    internal fun build(data: MutableMap<String, Int>): Unit {
-        data["strength"] = abilitiesBonusBuilder.strength.value
-        data["dexterity"] = abilitiesBonusBuilder.dexterity.value
-    }
-}
-
-class WhenAttackingBody {
-
-    val attack: MutableList<(evercraft.Character, evercraft.Character) -> Unit> = mutableListOf()
-
-    operator fun <T> MutableList<T>.plus(other :T): Unit {
-        add(other)
+    operator fun MutableList<() -> Int>.plus(other: () -> Int): Unit {
+        this.add(other)
     }
 
 
 }
 
 
-class IntHolder(initialValue: Int) {
-    var value: Int = initialValue
+class LamdaListToIntDelegate<K>(list: List<() -> Int> = listOf()) {
 
-    operator fun plus(other: Int): Unit {
-        value = value + other
-    }
+    val list: List<() -> Int> = list
+
+    operator fun getValue(thisRef: K, property: KProperty<*>): Int = list.map { it() }.sum()
 
 }
-
-
