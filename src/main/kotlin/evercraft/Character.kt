@@ -32,8 +32,16 @@ class Character internal constructor(val name: String,
 
     fun isAlive(): Boolean = if (hitPoints > 0) true else false
 
-    fun attackModifier(): Int = Equipable.withCharacter(this) {
-        level / 2 + strength.modifier + characterClass.attack
+    fun attackModifier(defender: Character): Int = Equipable.withCharacter(this) {
+        Equipable.withDefender(defender) {
+            level / 2 + strength.modifier + characterClass.attack
+        }
+    }
+
+    fun criticalDamageMultiplier(): Int = max(2, characterClass.criticalDamageMultiplier)
+
+    fun baseDamage(): Int = Equipable.withCharacter(this) {
+        1 + strength.modifier + characterClass.damage
     }
 
     private fun copy(name: String = this.name,
@@ -48,8 +56,8 @@ class Character internal constructor(val name: String,
     private fun determineDefaultHitPoints(): Int = Equipable.withCharacter(this) {
         max(level * (5 + constitution.modifier) + characterClass.hitPoints, 1)
     }
-
 }
+
 
 fun character(block: CharacterBuilder.() -> Unit): Character {
     val builder = CharacterBuilder()

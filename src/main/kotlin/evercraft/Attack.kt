@@ -15,15 +15,12 @@ class Attack(attacker: Character, defender: Character, val roll: Int) {
     }
 
     val attackRoll: Int by lazy {
-        roll + originalAttacker.attackModifier()
+        roll + originalAttacker.attackModifier(originalDefender)
     }
 
     fun isHit() = attackRoll >= (originalDefender.armorClass + originalDefender.dexterity.modifier)
 
-    fun damage(): Int = max(damageMultiplier() * baseDamage(), 1)
+    fun damage(): Int = max(damageMultiplier() * originalAttacker.baseDamage(), 1)
 
-    private fun damageMultiplier(): Int = if (roll == 20) 2 else 1
-
-    private fun baseDamage(): Int = 1 + originalAttacker.strength.modifier
-
+    private fun damageMultiplier(): Int = if (roll == 20) originalAttacker.criticalDamageMultiplier() else 1
 }

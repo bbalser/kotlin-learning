@@ -10,7 +10,7 @@ class FighterSpec : Spek({
     given("A fighter") {
 
         for (level in (1..20)) {
-            on("with a level of ${level}") {
+            on("with a level of $level") {
                 val fighter = character {
                     name = "fighter"
                     experiencePoints = (level - 1) * 1000
@@ -23,7 +23,7 @@ class FighterSpec : Spek({
 
                 val attack = Attack(fighter, defender, 0)
 
-                it("should have an attack roll of ${level}") {
+                it("should have an attack roll of $level") {
                     assertEquals(level, attack.attackRoll)
                 }
 

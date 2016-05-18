@@ -12,7 +12,7 @@ class EquippableSpec : Spek({
         on("when created with specified values") {
             val equipable = object : Equipable({
 
-                strength + 2
+                strength = 2
                 dexterity + 1
                 constitution + 2
                 wisdom + 5
@@ -21,7 +21,9 @@ class EquippableSpec : Spek({
 
                 attack + 5
 
-                hitpoints + { level() }
+                hitpoints + my.level
+
+                criticalDamageMultiplier = 3
 
             }) {}
 
@@ -31,8 +33,10 @@ class EquippableSpec : Spek({
             }
 
 
-            it("should have a strength of 3") {
-                assertEquals(2, equipable.strength)
+            fit("should have a strength of 3") {
+                Equipable.withCharacter(person) {
+                    assertEquals(2, equipable.strength)
+                }
             }
 
             it("should have a dexterity of 1") {
@@ -63,6 +67,10 @@ class EquippableSpec : Spek({
 
             it("should have an attack of 5") {
                 assertEquals(5, equipable.attack)
+            }
+
+            it("should have a critical damage multiplier of 3") {
+                assertEquals(3, equipable.criticalDamageMultiplier)
             }
 
         }
