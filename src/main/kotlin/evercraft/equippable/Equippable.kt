@@ -2,6 +2,7 @@ package evercraft.equippable
 
 import evercraft.Character
 import evercraft.ThreadLocalDelegate
+import evercraft.with
 import kotlin.reflect.KProperty
 
 
@@ -9,8 +10,11 @@ open class Equipable(block: EquipableBody.() -> Unit) {
     private val body = EquipableBody()
 
     companion object {
-        internal val attackerThreadLocal: ThreadLocal<Character> = ThreadLocal()
-        internal val defenderThreadLocal: ThreadLocal<Character> = ThreadLocal()
+        val characterThreadLocal: ThreadLocal<Character> = ThreadLocal()
+
+        fun <R> withCharacter(character: Character, block: () -> R): R {
+            return characterThreadLocal.with(character, block)
+        }
     }
 
     init {
@@ -23,13 +27,12 @@ open class Equipable(block: EquipableBody.() -> Unit) {
     val wisdom: Int by LamdaListToIntDelegate<Equipable>(body.wisdom)
     val intelligence: Int by LamdaListToIntDelegate<Equipable>(body.intelligence)
     val charisma: Int by LamdaListToIntDelegate<Equipable>(body.charisma)
+    val hitPoints: Int by LamdaListToIntDelegate<Equipable>(body.hitpoints)
+    val attack: Int by LamdaListToIntDelegate<Equipable>(body.attack)
 
 }
 
 class EquipableBody {
-
-    val attacker: Character by ThreadLocalDelegate(Equipable.attackerThreadLocal)
-    val defender: Character by ThreadLocalDelegate(Equipable.defenderThreadLocal)
 
     val strength: MutableList<() -> Int> = mutableListOf()
     val dexterity: MutableList<() -> Int> = mutableListOf()
@@ -37,6 +40,9 @@ class EquipableBody {
     val wisdom: MutableList<() -> Int> = mutableListOf()
     val intelligence: MutableList<() -> Int> = mutableListOf()
     val charisma: MutableList<() -> Int> = mutableListOf()
+    val hitpoints: MutableList<() -> Int> = mutableListOf()
+    val attack: MutableList<() -> Int> = mutableListOf()
+
 
     operator fun MutableList<() -> Int>.plus(other: Int): Unit {
         this.add({ -> other })
@@ -46,6 +52,7 @@ class EquipableBody {
         this.add(other)
     }
 
+    fun level(): Int = Equipable.characterThreadLocal.get().level
 
 }
 

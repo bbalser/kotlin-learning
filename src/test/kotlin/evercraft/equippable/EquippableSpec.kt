@@ -19,7 +19,17 @@ class EquippableSpec : Spek({
                 intelligence + 1
                 charisma + 8
 
+                attack + 5
+
+                hitpoints + { level() }
+
             }) {}
+
+            val person = character {
+                name = "generic"
+                experiencePoints = 17980
+            }
+
 
             it("should have a strength of 3") {
                 assertEquals(2, equipable.strength)
@@ -37,12 +47,22 @@ class EquippableSpec : Spek({
                 assertEquals(5, equipable.wisdom)
             }
 
-            it("should have a intelligence of 1") {
+            it("should have an intelligence of 1") {
                 assertEquals(1, equipable.intelligence)
             }
 
             it("should have a charisma of 8") {
                 assertEquals(8, equipable.charisma)
+            }
+
+            it("should have 11 hitpoints") {
+                Equipable.withCharacter(person) {
+                    assertEquals(18, equipable.hitPoints)
+                }
+            }
+
+            it("should have an attack of 5") {
+                assertEquals(5, equipable.attack)
             }
 
         }

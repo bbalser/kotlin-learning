@@ -1,5 +1,7 @@
 package evercraft
 
+import evercraft.equippable.Equipable
+import evercraft.equippable.EquipableBody
 import java.lang.Math.*
 import kotlin.properties.Delegates
 
@@ -8,7 +10,8 @@ class Character internal constructor(val name: String,
                                      val armorClass: Int,
                                      val abilities: Map<String, Ability>,
                                      hitPoints: Int?,
-                                     val experiencePoints: Int = 0) {
+                                     val experiencePoints: Int = 0,
+                                     val characterClass: CharacterClass) {
 
     val strength: Ability by abilities
     val dexterity: Ability by abilities
@@ -17,7 +20,7 @@ class Character internal constructor(val name: String,
     val intelligence: Ability by abilities
     val charisma: Ability by abilities
     val level: Int by lazy {
-        min((floor(experiencePoints / 1000.0) + 1).toInt(),20)
+        min((floor(experiencePoints / 1000.0) + 1).toInt(), 20)
     }
     val hitPoints: Int = hitPoints ?: determineDefaultHitPoints()
 
@@ -29,14 +32,23 @@ class Character internal constructor(val name: String,
 
     fun isAlive(): Boolean = if (hitPoints > 0) true else false
 
+    fun attackModifier(): Int = Equipable.withCharacter(this) {
+        level / 2 + strength.modifier + characterClass.attack
+    }
+
     private fun copy(name: String = this.name,
                      alignment: Alignment = this.alignment,
                      armorClass: Int = this.armorClass,
                      abilities: Map<String, Ability> = this.abilities,
                      hitPoints: Int = this.hitPoints,
-                     experiencePoints: Int = this.experiencePoints) = Character(name, alignment, armorClass, abilities, hitPoints, experiencePoints)
+                     experiencePoints: Int = this.experiencePoints,
+                     characterClass: CharacterClass = this.characterClass) =
+            Character(name, alignment, armorClass, abilities, hitPoints, experiencePoints, characterClass)
 
-    private fun determineDefaultHitPoints(): Int = max(level * (5 + constitution.modifier), 1)
+    private fun determineDefaultHitPoints(): Int = Equipable.withCharacter(this) {
+        max(level * (5 + constitution.modifier) + characterClass.hitPoints, 1)
+    }
+
 }
 
 fun character(block: CharacterBuilder.() -> Unit): Character {
@@ -54,6 +66,7 @@ class CharacterBuilder {
     var armorClass: Int = 10
     var alignment: Alignment = Alignment.NEUTRAL
     var experiencePoints: Int = 0
+    var characterClass: CharacterClass? = null
 
     fun abilities(block: AbilitiesBuilder.() -> Unit): Unit {
         abilitesBuilder.block()
@@ -64,6 +77,9 @@ class CharacterBuilder {
             armorClass = armorClass,
             alignment = alignment,
             abilities = abilitesBuilder.build(),
-            experiencePoints = experiencePoints)
+            experiencePoints = experiencePoints,
+            characterClass = characterClass ?: CharacterClass { })
 
 }
+
+open class CharacterClass(block: EquipableBody.() -> Unit) : Equipable(block)

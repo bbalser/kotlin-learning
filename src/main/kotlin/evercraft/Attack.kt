@@ -14,8 +14,11 @@ class Attack(attacker: Character, defender: Character, val roll: Int) {
         originalAttacker.addExperience(this)
     }
 
+    val attackRoll: Int by lazy {
+        roll + originalAttacker.attackModifier()
+    }
 
-    fun isHit() = (roll + (originalAttacker.level/2) + originalAttacker.strength.modifier) >= (originalDefender.armorClass + originalDefender.dexterity.modifier)
+    fun isHit() = attackRoll >= (originalDefender.armorClass + originalDefender.dexterity.modifier)
 
     fun damage(): Int = max(damageMultiplier() * baseDamage(), 1)
 
