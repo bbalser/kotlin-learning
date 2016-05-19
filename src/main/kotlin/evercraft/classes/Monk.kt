@@ -1,6 +1,7 @@
 package evercraft.classes
 
 import evercraft.CharacterClass
+import kotlin.ranges.IntProgression.Companion.fromClosedRange
 
 object Monk: CharacterClass({
 
@@ -9,5 +10,10 @@ object Monk: CharacterClass({
     damage + 2
 
     armorClass + { my.wisdom.modifier }
+
+    attack + {
+        fromClosedRange(2, my.level, 3).count() +
+        fromClosedRange(3, my.level, 3).count()
+    }
 
 })

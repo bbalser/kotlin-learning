@@ -33,7 +33,7 @@ class EquippableSpec : Spek({
 
 
             it("should have a strength of 3") {
-                Equipable.withCharacter(person) {
+                withCharacter(person) {
                     assertEquals(2, equipable.strength)
                 }
             }
@@ -59,7 +59,7 @@ class EquippableSpec : Spek({
             }
 
             it("should have 11 hitpoints") {
-                Equipable.withCharacter(person) {
+                withCharacter(person) {
                     assertEquals(18, equipable.hitPoints)
                 }
             }

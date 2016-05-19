@@ -2,6 +2,9 @@ package evercraft
 
 import evercraft.equippable.Equipable
 import evercraft.equippable.EquipableBody
+import evercraft.equippable.withCharacter
+import evercraft.equippable.withDefender
+import evercraft.races.Human
 import java.lang.Math.*
 import kotlin.properties.Delegates
 
@@ -10,7 +13,8 @@ class Character internal constructor(val name: String,
                                      val abilities: Map<String, Ability>,
                                      hitPoints: Int?,
                                      val experiencePoints: Int = 0,
-                                     val characterClass: CharacterClass) {
+                                     val characterClass: CharacterClass,
+                                     val race: Race) {
 
     val strength: Ability by abilities
     val dexterity: Ability by abilities
@@ -23,7 +27,7 @@ class Character internal constructor(val name: String,
     }
 
     val armorClass: Int by lazy {
-        Equipable.withCharacter(this) {
+        withCharacter(this) {
             10 + dexterity.modifier + characterClass.armorClass
         }
     }
@@ -38,15 +42,15 @@ class Character internal constructor(val name: String,
 
     fun isAlive(): Boolean = if (hitPoints > 0) true else false
 
-    fun attackModifier(defender: Character): Int = Equipable.withCharacter(this) {
-        Equipable.withDefender(defender) {
+    fun attackModifier(defender: Character): Int = withCharacter(this) {
+        withDefender(defender) {
             level / 2 + strength.modifier + characterClass.attack
         }
     }
 
     fun criticalDamageMultiplier(): Int = max(2, characterClass.criticalDamageMultiplier)
 
-    fun baseDamage(): Int = Equipable.withCharacter(this) {
+    fun baseDamage(): Int = withCharacter(this) {
         1 + strength.modifier + characterClass.damage
     }
 
@@ -55,10 +59,11 @@ class Character internal constructor(val name: String,
                      abilities: Map<String, Ability> = this.abilities,
                      hitPoints: Int = this.hitPoints,
                      experiencePoints: Int = this.experiencePoints,
-                     characterClass: CharacterClass = this.characterClass) =
-            Character(name, alignment, abilities, hitPoints, experiencePoints, characterClass)
+                     characterClass: CharacterClass = this.characterClass,
+                     race: Race = this.race) =
+            Character(name, alignment, abilities, hitPoints, experiencePoints, characterClass, race)
 
-    private fun determineDefaultHitPoints(): Int = Equipable.withCharacter(this) {
+    private fun determineDefaultHitPoints(): Int = withCharacter(this) {
         max(level * (5 + constitution.modifier) + characterClass.hitPoints, 1)
     }
 }
@@ -79,6 +84,7 @@ class CharacterBuilder {
     var alignment: Alignment = Alignment.NEUTRAL
     var experiencePoints: Int = 0
     var characterClass: CharacterClass? = null
+    var race : Race = Human
 
     fun abilities(block: AbilitiesBuilder.() -> Unit): Unit {
         abilitesBuilder.block()
@@ -89,8 +95,11 @@ class CharacterBuilder {
             alignment = alignment,
             abilities = abilitesBuilder.build(),
             experiencePoints = experiencePoints,
-            characterClass = characterClass ?: CharacterClass { })
+            characterClass = characterClass ?: CharacterClass { },
+            race = race)
 
 }
 
 open class CharacterClass(block: EquipableBody.() -> Unit) : Equipable(block)
+
+open class Race(block: EquipableBody.() -> Unit) : Equipable(block)

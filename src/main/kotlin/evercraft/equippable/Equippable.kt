@@ -5,6 +5,13 @@ import evercraft.ThreadLocalDelegate
 import evercraft.with
 import kotlin.reflect.KProperty
 
+fun <R> withCharacter(character: Character, block: () -> R): R {
+    return Equipable.characterThreadLocal.with(character, block)
+}
+
+fun <R> withDefender(defender: Character, block: () -> R): R {
+    return Equipable.defenderThreadLocal.with(defender, block)
+}
 
 open class Equipable(block: EquipableBody.() -> Unit) {
     private val body = EquipableBody()
@@ -12,14 +19,6 @@ open class Equipable(block: EquipableBody.() -> Unit) {
     companion object {
         internal val characterThreadLocal: ThreadLocal<Character> = ThreadLocal()
         internal val defenderThreadLocal: ThreadLocal<Character> = ThreadLocal()
-
-        fun <R> withCharacter(character: Character, block: () -> R): R {
-            return characterThreadLocal.with(character, block)
-        }
-
-        fun <R> withDefender(defender: Character, block: () -> R): R {
-            return defenderThreadLocal.with(defender, block)
-        }
     }
 
     init {

@@ -38,6 +38,34 @@ class MonkSpec: Spek({
 
         }
 
+        val attackDamageData = listOf(
+                1 to 0,
+                2 to 2,
+                3 to 3,
+                4 to 4,
+                5 to 5,
+                6 to 7,
+                7 to 7,
+                8 to 9
+        )
+
+        for ((level, attackModifier) in attackDamageData) {
+            on("when attacking at level $level") {
+
+                val leveledMonk = character {
+                    name = "monk"
+                    characterClass = Monk
+                    experiencePoints = (level-1) * 1000
+                }
+
+                it("should have attackModifier of $attackModifier") {
+                    assertEquals(attackModifier, leveledMonk.attackModifier(character { name = "defender" }))
+                }
+
+            }
+        }
+
+
         on("when created") {
             val monk = character {
                 name = "monk"
@@ -51,6 +79,7 @@ class MonkSpec: Spek({
             it("should add wisdom modifier and dexterity modifer to armorClass") {
                 assertEquals(12, monk.armorClass)
             }
+
         }
 
     }

@@ -1,5 +1,6 @@
 package evercraft
 
+import evercraft.races.Human
 import org.jetbrains.spek.api.Spek
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -65,6 +66,10 @@ class CharacterSpec : Spek({
 
             it ("should have a default level of 1") {
                 assertEquals(1, character.level)
+            }
+
+            it ("should be human") {
+                assertTrue(character.race is Human)
             }
 
         }
