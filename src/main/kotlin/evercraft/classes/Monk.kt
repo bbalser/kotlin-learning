@@ -8,4 +8,6 @@ object Monk: CharacterClass({
 
     damage + 2
 
+    armorClass + { my.wisdom.modifier }
+
 })

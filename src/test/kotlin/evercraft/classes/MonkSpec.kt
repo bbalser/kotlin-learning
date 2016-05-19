@@ -38,6 +38,21 @@ class MonkSpec: Spek({
 
         }
 
+        on("when created") {
+            val monk = character {
+                name = "monk"
+                characterClass = Monk
+                abilities {
+                    wisdom = 12
+                    dexterity = 12
+                }
+            }
+
+            it("should add wisdom modifier and dexterity modifer to armorClass") {
+                assertEquals(12, monk.armorClass)
+            }
+        }
+
     }
 
 })

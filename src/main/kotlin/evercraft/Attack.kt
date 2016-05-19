@@ -18,7 +18,7 @@ class Attack(attacker: Character, defender: Character, val roll: Int) {
         roll + originalAttacker.attackModifier(originalDefender)
     }
 
-    fun isHit() = attackRoll >= (originalDefender.armorClass + originalDefender.dexterity.modifier)
+    fun isHit() = attackRoll >= originalDefender.armorClass
 
     fun damage(): Int = max(damageMultiplier() * originalAttacker.baseDamage(), 1)
 

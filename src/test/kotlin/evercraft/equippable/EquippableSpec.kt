@@ -1,7 +1,6 @@
 package evercraft.equippable
 
 import evercraft.character
-import evercraft.with
 import org.jetbrains.spek.api.Spek
 import kotlin.test.assertEquals
 
@@ -12,7 +11,7 @@ class EquippableSpec : Spek({
         on("when created with specified values") {
             val equipable = object : Equipable({
 
-                strength = 2
+                strength + 2
                 dexterity + 1
                 constitution + 2
                 wisdom + 5
@@ -21,7 +20,7 @@ class EquippableSpec : Spek({
 
                 attack + 5
 
-                hitpoints + my.level
+                hitpoints + { my.level }
 
                 criticalDamageMultiplier = 3
 
@@ -33,7 +32,7 @@ class EquippableSpec : Spek({
             }
 
 
-            fit("should have a strength of 3") {
+            it("should have a strength of 3") {
                 Equipable.withCharacter(person) {
                     assertEquals(2, equipable.strength)
                 }

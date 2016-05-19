@@ -94,7 +94,6 @@ class CharacterSpec : Spek({
             val character = character {
                 name = "default"
                 hitPoints = 4
-                armorClass = 12
                 alignment = Alignment.EVIL
                 abilities {
                     wisdom = 17
@@ -104,10 +103,6 @@ class CharacterSpec : Spek({
 
             it("should have 4 hitPoints") {
                 assertEquals(4, character.hitPoints)
-            }
-
-            it("should have an armorClass of 12") {
-                assertEquals(12, character.armorClass)
             }
 
             it("should have an alignment of Evil") {

@@ -23,10 +23,10 @@ open class Equipable(block: EquipableBody.() -> Unit) {
     }
 
     init {
-//        body.block()
+        body.block()
     }
 
-    val strength: Int by DynamicEquippableBodyBlock(block)
+    val strength: Int by LamdaListToIntDelegate<Equipable>(body.strength)
     val dexterity: Int by LamdaListToIntDelegate<Equipable>(body.dexterity)
     val constitution: Int by LamdaListToIntDelegate<Equipable>(body.constitution)
     val wisdom: Int by LamdaListToIntDelegate<Equipable>(body.wisdom)
@@ -35,6 +35,7 @@ open class Equipable(block: EquipableBody.() -> Unit) {
     val hitPoints: Int by LamdaListToIntDelegate<Equipable>(body.hitpoints)
     val attack: Int by LamdaListToIntDelegate<Equipable>(body.attack)
     val damage: Int by LamdaListToIntDelegate<Equipable>(body.damage)
+    val armorClass: Int by LamdaListToIntDelegate<Equipable>(body.armorClass)
     val criticalDamageMultiplier: Int by lazy {
         body.criticalDamageMultiplier
     }
@@ -43,11 +44,7 @@ open class Equipable(block: EquipableBody.() -> Unit) {
 
 class EquipableBody {
 
-    internal val values: MutableMap<String, Int> = mutableMapOf(
-            "strength" to 0
-    )
-
-    var strength: Int by values
+    val strength: MutableList<() -> Int> = mutableListOf()
     val dexterity: MutableList<() -> Int> = mutableListOf()
     val constitution: MutableList<() -> Int> = mutableListOf()
     val wisdom: MutableList<() -> Int> = mutableListOf()
@@ -56,6 +53,7 @@ class EquipableBody {
     val hitpoints: MutableList<() -> Int> = mutableListOf()
     val attack: MutableList<() -> Int> = mutableListOf()
     val damage: MutableList<() -> Int> = mutableListOf()
+    val armorClass: MutableList<() -> Int> = mutableListOf()
     var criticalDamageMultiplier: Int = 0
 
     val my: Character by ThreadLocalDelegate(Equipable.characterThreadLocal)
@@ -70,17 +68,6 @@ class EquipableBody {
     }
 
 }
-
-class DynamicEquippableBodyBlock(val block: EquipableBody.() -> Unit) {
-
-    operator fun getValue(thisRef: Equipable, property: KProperty<*>): Int {
-        val body = EquipableBody()
-        body.block()
-        return body.values[property.name] ?: 0
-    }
-
-}
-
 
 class LamdaListToIntDelegate<K>(list: List<() -> Int> = listOf()) {
 

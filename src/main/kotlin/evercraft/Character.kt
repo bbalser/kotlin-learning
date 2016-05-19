@@ -7,7 +7,6 @@ import kotlin.properties.Delegates
 
 class Character internal constructor(val name: String,
                                      val alignment: Alignment,
-                                     val armorClass: Int,
                                      val abilities: Map<String, Ability>,
                                      hitPoints: Int?,
                                      val experiencePoints: Int = 0,
@@ -22,6 +21,13 @@ class Character internal constructor(val name: String,
     val level: Int by lazy {
         min((floor(experiencePoints / 1000.0) + 1).toInt(), 20)
     }
+
+    val armorClass: Int by lazy {
+        Equipable.withCharacter(this) {
+            10 + dexterity.modifier + characterClass.armorClass
+        }
+    }
+
     val hitPoints: Int = hitPoints ?: determineDefaultHitPoints()
 
     fun rename(newName: String): Character = copy(name = newName)
@@ -46,12 +52,11 @@ class Character internal constructor(val name: String,
 
     private fun copy(name: String = this.name,
                      alignment: Alignment = this.alignment,
-                     armorClass: Int = this.armorClass,
                      abilities: Map<String, Ability> = this.abilities,
                      hitPoints: Int = this.hitPoints,
                      experiencePoints: Int = this.experiencePoints,
                      characterClass: CharacterClass = this.characterClass) =
-            Character(name, alignment, armorClass, abilities, hitPoints, experiencePoints, characterClass)
+            Character(name, alignment, abilities, hitPoints, experiencePoints, characterClass)
 
     private fun determineDefaultHitPoints(): Int = Equipable.withCharacter(this) {
         max(level * (5 + constitution.modifier) + characterClass.hitPoints, 1)
@@ -71,7 +76,6 @@ class CharacterBuilder {
 
     var name: String by Delegates.notNull()
     var hitPoints: Int? = null
-    var armorClass: Int = 10
     var alignment: Alignment = Alignment.NEUTRAL
     var experiencePoints: Int = 0
     var characterClass: CharacterClass? = null
@@ -82,7 +86,6 @@ class CharacterBuilder {
 
     fun build(): Character = Character(name = name,
             hitPoints = hitPoints,
-            armorClass = armorClass,
             alignment = alignment,
             abilities = abilitesBuilder.build(),
             experiencePoints = experiencePoints,
