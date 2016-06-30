@@ -24,7 +24,7 @@ private fun convert(rolls: List<Char>): Int = rolls.fold(0) { soFar, next ->
     when (next) {
         'X' -> soFar + 10
         '/' -> (Math.ceil((soFar + 1) / 10.0) * 10).toInt()
-        '-' -> soFar + 0
+        '-' -> soFar
         else -> soFar + next.toString().toInt()
     }
 }
